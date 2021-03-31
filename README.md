@@ -42,3 +42,11 @@ $ docker-compose run batch sh shells/exec_all.sh 0
 # flake8(1行の文字数制限とビジュアルインデントは無視)
 flake8 src/app --ignore E501,E128
 ```
+
+## デプロイ手順
+
+- main ブランチから release ブランチを作成
+- develop ブランチから release ブランチへ PR 作成
+- STG 検証
+- release ブランチから main ブランチにプッシュ
+- 本番反映
