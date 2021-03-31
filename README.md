@@ -22,7 +22,7 @@ ML Playground App 用のバッチ処理を提供します。
 
 ```bash
 # ローカル起動(Help)
-$ python app/main.py --help
+$ python src/app/main.py --help
 # 入稿処理
 $ sh shells/exec_input.sh
 # 出稿処理
@@ -40,5 +40,5 @@ $ docker-compose run batch sh shells/exec_all.sh 0
 
 ```bash
 # flake8(1行の文字数制限とビジュアルインデントは無視)
-flake8 app --ignore E501,E128
+flake8 src/app --ignore E501,E128
 ```
