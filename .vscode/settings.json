@@ -1,0 +1,22 @@
+{
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": true
+  },
+  "restructuredtext.confPath": "",
+  "[python]": {
+    "editor.tabSize": 4
+  },
+  "python.analysis.extraPaths": ["./src/app"],
+  "python.linting.enabled": true,
+  "python.linting.pylintEnabled": false,
+  "python.linting.flake8Enabled": true,
+  "python.linting.lintOnSave": true,
+  "python.linting.flake8Args": [
+    "--ignore=E501,E128",
+    "--aggressive",
+    "--aggresive"
+  ],
+  "python.linting.mypyEnabled": true,
+  "python.formatting.provider": "autopep8",
+  "editor.formatOnSave": true
+}

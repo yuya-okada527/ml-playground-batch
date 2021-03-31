@@ -1,7 +1,6 @@
 .venv/
 env/
 *.env
-.vscode/
 *__pycache__/
 experiment/
 .mypy_cache/
