@@ -3,6 +3,7 @@ from typing import List
 
 from core.config import TmdbSettings
 from domain.models.internal.movie_model import MovieId
+from infra.repository.input.movie_id_repository import init_movie_id_repository
 from infra.repository.object_storage.object_model import ObjectKey
 from infra.repository.object_storage.object_storage_repository import \
     init_object_storage_repository
@@ -14,6 +15,7 @@ from util.http_util import call_get_api
 def extract_daily_file(target_date: date) -> ObjectKey:
 
     # パラメータを取得
+    # TODO UTCの8時に更新があるので、そこに合わせて取得できるように調整する必要あり
     target_date = target_date or date.today()
 
     # オブジェクトのキー名を作成
@@ -40,7 +42,10 @@ def extract_daily_file(target_date: date) -> ObjectKey:
 
 @task
 def truncate_movie_ids() -> None:
-    print("truncate_movie_ids")
+
+    movie_id_repository = init_movie_id_repository()
+
+    movie_id_repository.truncate_movie_ids_table()
 
 
 @task
