@@ -1,4 +1,4 @@
-from domain.models.internal.movie_model import (Genre, Movie, Review,
+from domain.models.internal.movie_model import (Genre, Movie, MovieId, Review,
                                                 _remove_emoji)
 
 
@@ -164,6 +164,41 @@ def test_genre_can_manage_same_genres():
     genre_set = set([genre1, genre2])
 
     assert len(genre_set) == 1
+
+
+def test_movie_id_equal_if_movie_id_id_same():
+
+    # テストデータ
+    same_movie_id = "same"
+    movie_id1 = MovieId(movie_id=same_movie_id, tmdb_id=0, imdb_id=0)
+    movie_id2 = MovieId(movie_id=same_movie_id, tmdb_id=1, imdb_id=1)
+
+    # 検証
+    assert movie_id1 == movie_id2
+
+
+def test_movie_id_not_equal_if_movie_id_is_different():
+
+    # テストデータ
+    same_tmdb_id = 0
+    same_imdb_id = 0
+    movie_id1 = MovieId(movie_id="movie_id1", tmdb_id=same_tmdb_id, imdb_id=same_imdb_id)
+    movie_id2 = MovieId(movie_id="movie_id2", tmdb_id=same_tmdb_id, imdb_id=same_imdb_id)
+
+    # 検証
+    assert movie_id1 != movie_id2
+
+
+def test_different_movie_id_are_created():
+
+    # テストデータ
+    same_tmdb_id = 0
+    same_imdb_id = 0
+    movie_id1 = MovieId.create_movie_id(tmdb_id=same_tmdb_id, imdb_id=same_imdb_id)
+    movie_id2 = MovieId.create_movie_id(tmdb_id=same_tmdb_id, imdb_id=same_imdb_id)
+
+    # 検証
+    assert movie_id1 != movie_id2
 
 
 def _make_movie_model():
