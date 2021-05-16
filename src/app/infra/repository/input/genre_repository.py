@@ -83,3 +83,7 @@ class GenreRepository:
             ))
 
         return genre_list
+
+
+def init_genre_repository() -> AbstractGenreRepository:
+    return GenreRepository()
