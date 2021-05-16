@@ -21,9 +21,6 @@ def update_genre_master(force_update: bool) -> None:
     )
 
 
-def update_genre_flow():
-    with Flow("Update Genre Master") as flow:
-        force_update = Parameter("force_update", default=True)
-        update_genre_master(force_update)
-
-    flow.run()
+with Flow("Update Genre Master") as flow:
+    force_update = Parameter("force_update", default=True)
+    update_genre_master(force_update)

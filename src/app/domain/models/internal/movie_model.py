@@ -2,6 +2,7 @@
 
 内部用の映画に関するモデルを記述するモジュール
 """
+import uuid
 from datetime import date
 from typing import Any, Optional
 
@@ -82,6 +83,27 @@ class Keyword(BaseModel):
     keyword_id: str
     name: str
     japanese_name: str
+
+
+class MovieId(BaseModel):
+    """映画IDモデル"""
+    movie_id: str
+    tmdb_id: Optional[int]
+    imdb_id: Optional[int]
+
+    def __hash__(self) -> int:
+        return hash(self.movie_id)
+
+    def __eq__(self, other: Any) -> bool:
+        if not isinstance(other, MovieId):
+            return False
+        return self.movie_id == other.movie_id
+
+    @classmethod
+    def create_movie_id(cls, tmdb_id: Optional[int] = None, imdb_id: Optional[int] = None) -> "MovieId":
+        # 映画IDは、UUIDで生成
+        movie_id = str(uuid.uuid4())
+        return cls(movie_id=movie_id, tmdb_id=tmdb_id, imdb_id=imdb_id)
 
 
 class Movie(BaseModel):
