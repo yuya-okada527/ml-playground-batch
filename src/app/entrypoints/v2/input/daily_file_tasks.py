@@ -1,17 +1,41 @@
 from datetime import date
 from typing import List
 
+from core.config import TmdbSettings
 from domain.models.internal.movie_model import MovieId
 from infra.repository.object_storage.object_model import ObjectKey
-from prefect import Flow, task
-from prefect.core.task import Parameter
+from infra.repository.object_storage.object_storage_repository import \
+    init_object_storage_repository
+from prefect import Flow, Parameter, task
+from util.http_util import call_get_api
 
 
 @task
 def extract_daily_file(target_date: date) -> ObjectKey:
+
+    # パラメータを取得
     target_date = target_date or date.today()
-    print(f"extract_daily_file: {target_date}")
-    return ObjectKey("", "")
+
+    # オブジェクトのキー名を作成
+    object_key = ObjectKey(
+        bucket_name="ml-playground-movie-data",
+        object_key=f"tmdb/movies/{target_date.year}/{target_date.month}/{target_date.day}.json.gz"
+    )
+
+    # 取得済みの場合、処理しない
+    object_storage_repository = init_object_storage_repository()
+    if object_storage_repository.exists(object_key):
+        return object_key
+
+    # TMDBから日時ファイルを取得
+    tmdb_settings = TmdbSettings()
+    daily_file_url = tmdb_settings.tmdb_file_url + f"movie_ids_{target_date.month:02}_{target_date.day}_{target_date.year}.json.gz"
+    file_response = call_get_api(url=daily_file_url)
+
+    # ファイルを保存
+    object_storage_repository.save(file_response.content, object_key)
+
+    return object_key
 
 
 @task
@@ -35,7 +59,7 @@ def make_movie_ids(daily_file_key: ObjectKey, max_id_size: int) -> List[MovieId]
 
 
 @task
-def chunck_movie_id_list(movie_id_list: List[MovieId], chunk_size: int) -> List[List[MovieId]]:
+def chunck_movie_id_list(movie_id_list: List[MovieId]) -> List[List[MovieId]]:
     print("chunck_movie_id_list")
     return []
 
@@ -57,12 +81,12 @@ with Flow("Daily File") as flow:
 
     # 映画IDを発番
     max_id_size = Parameter("max_id_size", default=300)
-    movie_id_list = make_movie_ids(daily_file_key, max_id_size)
+    movie_id_list = make_movie_ids(daily_file_key=daily_file_key, max_id_size=max_id_size)
 
     # 映画IDをチャンク化
-    chunk_size = Parameter("chunk_size", default=100)
-    chunked_movie_id_list = chunck_movie_id_list(movie_id_list, chunk_size)
+    # chunk_size = Parameter("chunk_size", default=100)
+    chunked_movie_id_list = chunck_movie_id_list(movie_id_list=movie_id_list)
     chunked_movie_id_list.set_upstream(truncate_result)
 
     # 映画IDをDBに保存
-    chunked_movie_id_list.map(load_movie_id_list)
+    load_movie_id_list.map(chunked_movie_id_list)

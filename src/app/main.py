@@ -3,7 +3,7 @@
 バッチコマンドを定義するモジュール
 """
 import typer
-from prefect.engine.executors.dask import LocalDaskExecutor
+from prefect.engine.executors import LocalDaskExecutor
 
 from entrypoints.v1 import (input_entrypoints, output_entrypoints,
                             similarity_entrypoints)

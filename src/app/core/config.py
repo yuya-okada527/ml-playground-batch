@@ -34,7 +34,8 @@ class TmdbSettings(BaseSettings):
         tmdb_url: TMDBのURL
     """
     tmdb_api_key: str
-    tmdb_url: str = "https://api.themoviedb.org/3"
+    tmdb_api_url: str = "https://api.themoviedb.org/3"
+    tmdb_file_url: str = "http://files.tmdb.org/p/exports/"
 
     class Config:
         env_file = "env/tmdb.env"
@@ -94,9 +95,9 @@ class SolrSettings(BaseSettings):
         solr_collection: コレクション
     """
     solr_protocol: str = "http"
-    solr_host: str
-    solr_port: int
-    solr_collection: str
+    solr_host: str = "xxx"
+    solr_port: int = 8983
+    solr_collection: str = "xxx"
 
     def get_url(self) -> str:
         """接続URL取得関数

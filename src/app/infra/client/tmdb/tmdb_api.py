@@ -2,6 +2,7 @@
 
 TMDBに対するHTTP通信を抽象化するモジュール
 """
+from datetime import date
 from typing import Optional, Protocol
 
 from core.config import TmdbSettings
@@ -124,7 +125,7 @@ class AbstractTmdbClient(Protocol):
 class TmdbClient:
 
     def __init__(self, settings: TmdbSettings) -> None:
-        self.base_url = settings.tmdb_url
+        self.base_url = settings.tmdb_api_url
         self.api_key = settings.tmdb_api_key
 
     def fetch_genres(self, language: MovieLanguage) -> TmdbMovieGenreList:

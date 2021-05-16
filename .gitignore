@@ -5,3 +5,5 @@ env/
 experiment/
 .mypy_cache/
 .coverage
+src/app/resources/object_storage/
+*.gz
