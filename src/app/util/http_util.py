@@ -53,7 +53,7 @@ def retry_exec(max_retry_num: int, wait_time_base: int):
 @retry_exec(max_retry_num=MAX_RETRY_NUM, wait_time_base=WAIT_TIME_BASE)
 def call_get_api(
     url: str,
-    query: Optional[BaseModel]
+    query: Optional[BaseModel] = None
 ) -> Response:
     """GETメソッドでAPIを実行する.
 
@@ -74,6 +74,7 @@ def call_get_api(
 
     # API実行
     try:
+        log.debug(f"url: {url}")
         response = requests.get(url, query_dict, timeout=TIMEOUT)
     except Timeout:
         log.warning(f"HTTP通信でタイムアウトが発生しました. url={url}")
@@ -160,5 +161,5 @@ def _check_status_code(response: Response) -> None:
     if response.status_code >= 500:
         raise ServerSideError()
     elif response.status_code >= 400:
-        log.error(f"クライアントサイドのエラーが発生しました. ステータスコード={response.status_code}, レスポンス={response.json()}")
+        log.error(f"クライアントサイドのエラーが発生しました. ステータスコード={response.status_code}, レスポンス={response.text}")
         raise ClientSideError()
