@@ -238,3 +238,7 @@ class TmdbClient:
         response = call_get_api(url=url, query=query)
 
         return TmdbMovieReviewList(**response.json())
+
+
+def init_tmdb_client():
+    return TmdbClient(TmdbSettings())
