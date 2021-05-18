@@ -1,3 +1,4 @@
+import json
 from datetime import date
 from typing import List
 
@@ -59,8 +60,18 @@ def make_movie_ids(daily_file_key: ObjectKey, max_id_size: int) -> List[MovieId]
     Returns:
         List[MovieId]: 映画IDリスト
     """
-    print("make_movie_ids")
-    return []
+
+    # 日時ファイルを取得
+    object_storage_repository = init_object_storage_repository()
+    with object_storage_repository.open_zip_file(daily_file_key) as f:
+        movie_ids = []
+        for row in f:
+            movie_json = json.loads(row.decode())
+            movie_ids.append(MovieId.create_movie_id(tmdb_id=movie_json["id"]))
+
+            if len(movie_ids) >= max_id_size:
+                return movie_ids
+    return movie_ids
 
 
 @task

@@ -1,6 +1,8 @@
+import contextlib
+import gzip
 import os
 from pathlib import Path
-from typing import Protocol
+from typing import Generator, Protocol, TextIO, Union
 
 from infra.repository.object_storage.object_model import ObjectKey
 
@@ -13,6 +15,9 @@ class ObjectStorageRepository(Protocol):
         raise NotImplementedError()
 
     def exists(self, object_key: ObjectKey) -> bool:
+        raise NotImplementedError()
+
+    def open_zip_file(self, object_key: ObjectKey) -> Generator[Union[gzip.GzipFile, TextIO], None, None]:
         raise NotImplementedError()
 
 
@@ -40,6 +45,21 @@ class LocalStorageRepository:
 
         # 存在チェック
         return os.path.exists(file_path)
+
+    @contextlib.contextmanager
+    def open_zip_file(self, object_key: ObjectKey) -> Generator[Union[gzip.GzipFile, TextIO], None, None]:
+
+        # ファイルパスを作成
+        file_path = self._make_file_path(object_key)
+
+        # gzipを解凍して、開く
+        file = gzip.open(file_path, mode="r")
+
+        # コンテクストの作成
+        try:
+            yield file
+        finally:
+            file.close()
 
     def _make_file_path(self, object_key: ObjectKey) -> str:
         return self.__root_path / object_key.bucket_name / object_key.object_key
