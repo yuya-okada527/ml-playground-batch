@@ -1,6 +1,6 @@
 import json
 from datetime import date
-from typing import List
+from typing import Iterator, List
 
 from core.config import TmdbSettings
 from domain.models.internal.movie_model import MovieId
@@ -8,8 +8,11 @@ from infra.repository.input.movie_id_repository import init_movie_id_repository
 from infra.repository.object_storage.object_model import ObjectKey
 from infra.repository.object_storage.object_storage_repository import \
     init_object_storage_repository
+from more_itertools import chunked
 from prefect import Flow, Parameter, task
 from util.http_util import call_get_api
+
+CHUNK_SIZE = 10
 
 
 @task
@@ -18,6 +21,8 @@ def extract_daily_file(target_date: date) -> ObjectKey:
     # パラメータを取得
     # TODO UTCの8時に更新があるので、そこに合わせて取得できるように調整する必要あり
     target_date = target_date or date.today()
+    # TODO for debug
+    target_date = date(2021, 5, 18)
 
     # オブジェクトのキー名を作成
     object_key = ObjectKey(
@@ -76,14 +81,14 @@ def make_movie_ids(daily_file_key: ObjectKey, max_id_size: int) -> List[MovieId]
 
 @task
 def chunck_movie_id_list(movie_id_list: List[MovieId]) -> List[List[MovieId]]:
-    print("chunck_movie_id_list")
-    return []
+    # Iteratorだと、taskをマップできないので、一度リスト化する
+    return list(chunked(movie_id_list, CHUNK_SIZE))
 
 
 @task
 def load_movie_id_list(movie_id_list: List[MovieId]):
     print("load_movie_id_list")
-    pass
+    return
 
 
 with Flow("Daily File") as flow:
@@ -105,4 +110,4 @@ with Flow("Daily File") as flow:
     chunked_movie_id_list.set_upstream(truncate_result)
 
     # 映画IDをDBに保存
-    load_movie_id_list.map(chunked_movie_id_list)
+    load_movie_id_list.map(movie_id_list=chunked_movie_id_list)
