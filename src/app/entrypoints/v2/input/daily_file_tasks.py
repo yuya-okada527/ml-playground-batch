@@ -87,9 +87,11 @@ def chunck_movie_id_list(movie_id_list: List[MovieId]) -> List[List[MovieId]]:
 
 @task
 def load_movie_id_list(movie_id_list: List[MovieId]):
-    print("load_movie_id_list")
-    return
 
+    # 映画IDリポジトリを初期化
+    movie_id_repository = init_movie_id_repository()
+
+    movie_id_repository.save_movie_ids(movie_id_list)
 
 with Flow("Daily File") as flow:
 
