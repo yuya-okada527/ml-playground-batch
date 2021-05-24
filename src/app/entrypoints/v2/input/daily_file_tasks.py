@@ -1,6 +1,6 @@
 import json
 from datetime import date
-from typing import Iterator, List
+from typing import List
 
 from core.config import TmdbSettings
 from domain.models.internal.movie_model import MovieId
