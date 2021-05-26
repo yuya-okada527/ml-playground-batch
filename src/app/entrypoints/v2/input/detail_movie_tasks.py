@@ -1,12 +1,14 @@
 from typing import List
 
 from domain.models.internal.movie_model import Movie, MovieId
+from infra.repository.input.movie_repository import init_movie_repository
 from prefect import Flow, task
 
 
 @task
 def truncate_movie_details() -> None:
-    print("truncate_movie_details")
+    movie_repository = init_movie_repository()
+    movie_repository.truncate_movies()
 
 @task
 def extract_movie_ids() -> List[MovieId]:

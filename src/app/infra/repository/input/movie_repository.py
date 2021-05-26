@@ -112,6 +112,10 @@ SELECT
 FROM
     similar_movies AS sm
 """
+TRUNCATE_MOVIE_STATEMENT = """\
+TRUNCATE TABLE
+    movies
+"""
 
 
 class AbstractMovieRepository(Protocol):
@@ -151,6 +155,9 @@ class AbstractMovieRepository(Protocol):
         Returns:
             類似映画dict(key: movie_id, value: set(similar_movie_id))
         """
+        ...
+
+    def truncate_movies(self) -> None:
         ...
 
 
@@ -250,6 +257,13 @@ class MovieRepository:
             similar_movies[row.movie_id].append(row.similar_movie_id)
 
         return similar_movies
+
+    def truncate_movies(self) -> None:
+        self.engine.execute(TRUNCATE_MOVIE_STATEMENT)
+
+
+def init_movie_repository():
+    return MovieRepository()
 
 
 def _map_to_movie(result: RowProxy) -> Movie:
