@@ -3,6 +3,7 @@ from typing import List, Protocol
 from domain.models.internal.movie_model import MovieId
 from infra.repository.input.base_repository import ENGINE
 from sqlalchemy.engine.base import Engine
+from sqlalchemy.engine.result import RowProxy
 
 # ---------------------------
 # SQL
@@ -21,6 +22,14 @@ VALUES
         %(imdb_id)s
     )
 """
+SELECT_ALL_MOVIE_ID_STATEMENT = """\
+SELECT
+    movie_id,
+    tmdb_id,
+    imdb_id
+FROM
+    movie_ids
+"""
 
 
 class AbstractMovieIdRepository(Protocol):
@@ -30,6 +39,9 @@ class AbstractMovieIdRepository(Protocol):
 
 
     def save_movie_ids(self, movie_id_list: List[MovieId]) -> None:
+        raise NotImplementedError()
+
+    def fetch_all(self) -> List[MovieId]:
         raise NotImplementedError()
 
 
@@ -49,6 +61,17 @@ class MovieIdRepository:
                 "tmdb_id": movie_id.tmdb_id,
                 "imdb_id": movie_id.imdb_id
             })
+
+    def fetch_all(self) -> List[MovieId]:
+        return [_map_to_movie_id(result) for result in self.engine.execute(SELECT_ALL_MOVIE_ID_STATEMENT)]
+
+
+def _map_to_movie_id(result: RowProxy) -> MovieId:
+    return MovieId(
+        movie_id=result.movie_id,
+        tmdb_id=result.tmdb_id,
+        imdb_id=result.imdb_id
+    )
 
 
 def init_movie_id_repository():
