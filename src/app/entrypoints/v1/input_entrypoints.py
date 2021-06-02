@@ -10,7 +10,6 @@ from infra.repository.input.movie_repository import MovieRepository
 from infra.repository.input.review_repository import ReviewRepository
 from service.input_service import (exec_update_genre_master,
                                    exec_update_movie_reviews,
-                                   exec_update_popular_movies,
                                    exec_update_similar_movies)
 
 app = typer.Typer()
@@ -39,30 +38,30 @@ def update_genre_master_batch(force_update: bool = False) -> None:
     )
 
 
-@app.command("movies")
-def update_popular_movies_batch(page: int = 1, force_update: bool = False) -> None:
-    """人気映画更新バッチ
+# @app.command("movies")
+# def update_popular_movies_batch(page: int = 1, force_update: bool = False) -> None:
+#     """人気映画更新バッチ
 
-    TMDBの人気映画APIを元に映画テーブルを更新します.
+#     TMDBの人気映画APIを元に映画テーブルを更新します.
 
-    Args:
-        page: 人気映画取得ページ
-        force_update: 強制アップデートフラグ(Trueの場合、登録済のレコードも更新します)
-    """
+#     Args:
+#         page: 人気映画取得ページ
+#         force_update: 強制アップデートフラグ(Trueの場合、登録済のレコードも更新します)
+#     """
 
-    # クライアントの初期化
-    tmdb_client = TmdbClient(TmdbSettings())
+#     # クライアントの初期化
+#     tmdb_client = TmdbClient(TmdbSettings())
 
-    # リポジトリの初期化
-    movie_repository = MovieRepository()
+#     # リポジトリの初期化
+#     movie_repository = MovieRepository()
 
-    # サービスの実行
-    exec_update_popular_movies(
-        force_update=force_update,
-        page=page,
-        tmdb_client=tmdb_client,
-        movie_repository=movie_repository
-    )
+#     # サービスの実行
+#     exec_update_popular_movies(
+#         force_update=force_update,
+#         page=page,
+#         tmdb_client=tmdb_client,
+#         movie_repository=movie_repository
+#     )
 
 
 @app.command("reviews")

@@ -6,7 +6,8 @@ from collections import defaultdict
 from datetime import datetime
 from typing import Protocol
 
-from domain.models.internal.movie_model import RELEASE_DATE_FMT, Genre, Movie
+from domain.models.internal.movie_model import (RELEASE_DATE_FMT, Genre, Movie,
+                                                MovieId)
 from infra.repository.input.base_repository import ENGINE
 from sqlalchemy.engine.base import Engine
 from sqlalchemy.engine.result import RowProxy
@@ -59,8 +60,9 @@ VALUES
 
 SELECT_ALL_MOVIE_STATEMENT = """\
 SELECT
-    m.movie_id,
-    m.imdb_id,
+    mi.movie_id,
+    mi.tmdb_id,
+    mi.imdb_id,
     m.original_title,
     m.japanese_title,
     m.overview,
@@ -77,6 +79,8 @@ SELECT
     sm.similar_movie_id
 FROM
     movies AS m
+    INNER JOIN
+        movie_ids AS mi
     INNER JOIN
         movie_genres AS mg
         ON m.movie_id = mg.movie_id
@@ -268,8 +272,11 @@ def init_movie_repository():
 
 def _map_to_movie(result: RowProxy) -> Movie:
     return Movie(
-        movie_id=result.movie_id,
-        imdb_id=result.imdb_id,
+        movie_id=MovieId(
+            movie_id=result.movie_id,
+            tmdb_id=result.tmdb_id,
+            imdb_id=result.imdb_id
+        ),
         original_title=result.original_title,
         japanese_title=result.japanese_title,
         overview=result.overview,

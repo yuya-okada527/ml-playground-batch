@@ -5,7 +5,8 @@ TMDBに関するモデルを記述するモジュール
 from datetime import datetime
 from typing import Any, Optional
 
-from domain.models.internal.movie_model import RELEASE_DATE_FMT, Genre, Movie
+from domain.models.internal.movie_model import (RELEASE_DATE_FMT, Genre, Movie,
+                                                MovieId)
 from pydantic import BaseModel
 
 
@@ -94,10 +95,10 @@ class TmdbMovieDetail(BaseModel):
     vote_average: float
     vote_count: int
 
-    def to_internal_movie(self) -> Movie:
+    def to_internal_movie(self, movie_id: str) -> Movie:
         """内部モデル変換関数"""
         return Movie(
-            movie_id=self.id,
+            movie_id=MovieId(movie_id, tmdb_id=self.id),
             imdb_id=self.imdb_id,
             original_title=self.original_title,
             japanese_title=self.title,

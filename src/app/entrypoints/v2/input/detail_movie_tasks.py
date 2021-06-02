@@ -1,6 +1,8 @@
 from typing import List
 
+from domain.enums.movie_enums import MovieLanguage
 from domain.models.internal.movie_model import Movie, MovieId
+from infra.client.tmdb.tmdb_api import init_tmdb_client
 from infra.repository.input.movie_id_repository import init_movie_id_repository
 from infra.repository.input.movie_repository import init_movie_repository
 from prefect import Flow, task
@@ -18,8 +20,11 @@ def extract_movie_ids() -> List[MovieId]:
 
 @task
 def extract_movie_detail(movie_id: MovieId) -> Movie:
-    print("fetch_movie_detail")
-    return None
+    tmdb_client = init_tmdb_client()
+    return tmdb_client.fetch_movie_detail(
+        movie_id=movie_id.tmdb_id,
+        language=MovieLanguage.JP
+    ).to_internal_movie(movie_id.movie_id)
 
 @task
 def load_movie_details(movies: List[Movie]) -> None:

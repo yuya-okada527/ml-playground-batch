@@ -57,44 +57,44 @@ def exec_update_genre_master(
     log.info(f"ジャンルマスタ更新バッチ実行完了. 更新数={count}")
 
 
-@batch_service
-def exec_update_popular_movies(
-    page: int,
-    force_update: bool,
-    tmdb_client: AbstractTmdbClient,
-    movie_repository: AbstractMovieRepository
-) -> None:
-    """人気映画更新を実行します.
+# @batch_service
+# def exec_update_popular_movies(
+#     page: int,
+#     force_update: bool,
+#     tmdb_client: AbstractTmdbClient,
+#     movie_repository: AbstractMovieRepository
+# ) -> None:
+#     """人気映画更新を実行します.
 
-    Args:
-        page: 対象ページ
-        force_update: 強制アップデートフラグ
-        tmdb_client: TMDBクライアント
-        movie_repository: 映画リポジトリ
-    """
+#     Args:
+#         page: 対象ページ
+#         force_update: 強制アップデートフラグ
+#         tmdb_client: TMDBクライアント
+#         movie_repository: 映画リポジトリ
+#     """
 
-    # 登録済の映画IDを取得
-    registered_movies = set(movie_repository.fetch_all_movie_id())
+#     # 登録済の映画IDを取得
+#     registered_movies = set(movie_repository.fetch_all_movie_id())
 
-    # 人気映画のリストを取得
-    popular_movies = tmdb_client.fetch_popular_movies(page)
+#     # 人気映画のリストを取得
+#     popular_movies = tmdb_client.fetch_popular_movies(page)
 
-    # 映画IDリストを取得(登録済の映画は含めないが、強制アップデートフラグありの場合取得)
-    movie_id_list = [movie.id for movie in popular_movies.results if movie.id not in registered_movies or force_update]
+#     # 映画IDリストを取得(登録済の映画は含めないが、強制アップデートフラグありの場合取得)
+#     movie_id_list = [movie.id for movie in popular_movies.results if movie.id not in registered_movies or force_update]
 
-    # 映画詳細リストを取得
-    movie_detail_list = tmdb_client.fetch_movie_detail_list(
-        movie_id_list=movie_id_list,
-        language=MovieLanguage.JP
-    )
+#     # 映画詳細リストを取得
+#     movie_detail_list = tmdb_client.fetch_movie_detail_list(
+#         movie_id_list=movie_id_list,
+#         language=MovieLanguage.JP
+#     )
 
-    # 映画モデルリストに変換
-    movie_list = [movie.to_internal_movie() for movie in movie_detail_list]
+#     # 映画モデルリストに変換 TODO
+#     movie_list = [] # movie.to_internal_movie() for movie in movie_detail_list]
 
-    # モデルの永続化
-    movie_repository.save_movie_list(movie_list)
+#     # モデルの永続化
+#     movie_repository.save_movie_list(movie_list)
 
-    log.info(f"人気映画情報取得バッチ実行完了. 更新数={len(movie_list)}")
+#     log.info(f"人気映画情報取得バッチ実行完了. 更新数={len(movie_list)}")
 
 
 @batch_service

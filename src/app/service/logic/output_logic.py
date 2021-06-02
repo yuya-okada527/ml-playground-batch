@@ -67,7 +67,7 @@ def map_to_solr_model(movie: Movie, exec_time: int) -> MovieSolrModel:
         MovieSolrModel: Solr映画モデル
     """
     return MovieSolrModel(
-        movie_id=movie.movie_id,
+        movie_id=movie.movie_id.movie_id,
         free_word=_make_freeword(movie),
         original_title=movie.original_title,
         japanese_title=movie.japanese_title,

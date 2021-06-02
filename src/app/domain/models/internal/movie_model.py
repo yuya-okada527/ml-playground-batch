@@ -129,8 +129,7 @@ class Movie(BaseModel):
         keywords: キーワードリスト
         similar_movies: 類似映画リスト
     """
-    movie_id: int
-    imdb_id: Optional[str] = None
+    movie_id: MovieId
     original_title: Optional[str] = None
     japanese_title: Optional[str] = None
     overview: Optional[str] = None
