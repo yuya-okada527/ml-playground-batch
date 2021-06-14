@@ -37,7 +37,6 @@ class AbstractMovieIdRepository(Protocol):
     def truncate_movie_ids_table(self) -> None:
         raise NotImplementedError()
 
-
     def save_movie_ids(self, movie_id_list: List[MovieId]) -> None:
         raise NotImplementedError()
 

@@ -93,6 +93,7 @@ def load_movie_id_list(movie_id_list: List[MovieId]):
 
     movie_id_repository.save_movie_ids(movie_id_list)
 
+
 with Flow("Daily File") as flow:
 
     # 日時ファイルを取得

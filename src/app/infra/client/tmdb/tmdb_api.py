@@ -2,7 +2,6 @@
 
 TMDBに対するHTTP通信を抽象化するモジュール
 """
-from datetime import date
 from typing import Optional, Protocol
 
 from core.config import TmdbSettings

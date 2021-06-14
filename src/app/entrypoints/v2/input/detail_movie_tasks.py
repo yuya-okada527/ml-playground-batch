@@ -13,10 +13,12 @@ def truncate_movie_details() -> None:
     movie_repository = init_movie_repository()
     movie_repository.truncate_movies()
 
+
 @task
 def extract_movie_ids() -> List[MovieId]:
     movie_id_repository = init_movie_id_repository()
     return movie_id_repository.fetch_all()
+
 
 @task
 def extract_movie_detail(movie_id: MovieId) -> Movie:
@@ -25,6 +27,7 @@ def extract_movie_detail(movie_id: MovieId) -> Movie:
         movie_id=movie_id.tmdb_id,
         language=MovieLanguage.JP
     ).to_internal_movie(movie_id.movie_id)
+
 
 @task
 def load_movie_details(movies: List[Movie]) -> None:
