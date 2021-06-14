@@ -2,7 +2,7 @@ from typing import Optional
 
 from domain.enums.movie_enums import MovieLanguage
 from domain.enums.similarity_enums import SimilarityModelType
-from domain.models.internal.movie_model import Genre, Movie, Review
+from domain.models.internal.movie_model import Genre, Movie, MovieId, Review
 from domain.models.rest.tmdb_model import (TmdbMovie, TmdbMovieDetail,
                                            TmdbMovieGenre, TmdbMovieGenreList,
                                            TmdbMovieReview,
@@ -206,7 +206,9 @@ class FakeMoviewRepository:
     def fetch_all(self) -> list[Movie]:
         return [
             Movie(
-                movie_id=0
+                movie_id=MovieId(
+                    movie_id="movie_id"
+                )
             )
         ]
 

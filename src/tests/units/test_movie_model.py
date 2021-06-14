@@ -205,7 +205,7 @@ def _make_movie_model():
     """出稿対象となる最低限のフィールドを追加した映画モデル"""
 
     return Movie(
-        movie_id=0,
+        movie_id=MovieId(movie_id=0),
         original_title="test title",
         overview="overview",
         poster_path="poster_path",

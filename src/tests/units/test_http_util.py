@@ -102,6 +102,7 @@ class SampleModel(BaseModel):
 class FakeResponse(Response):
 
     def __init__(self, status_code) -> None:
+        super().__init__()
         self.status_code = status_code
 
     def json(self):

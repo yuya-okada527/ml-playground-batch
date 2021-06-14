@@ -12,7 +12,6 @@ from sqlalchemy.engine.base import Connection, Engine, Transaction
 CREATE_MOVIES_TABLE = """\
 CREATE TABLE IF NOT EXISTS `movies` (
   `movie_id`        INT NOT NULL PRIMARY KEY,
-  `imdb_id`         VARCHAR(64),
   `original_title`  VARCHAR(256),
   `japanese_title`  VARCHAR(256),
   `overview`        TEXT,
@@ -53,6 +52,13 @@ CREATE TABLE IF NOT EXISTS `similar_movies` (
   PRIMARY KEY(`movie_id`, `similar_movie_id`)
 )
 """
+CREATE_MOVIE_IDS_TABLE = """\
+CREATE TABLE IF NOT EXISTS `movie_ids` (
+  `movie_id`        CHAR(36) PRIMARY KEY,
+  `tmdb_id`         INT,
+  `imdb_id`         INT
+)
+"""
 INIT_DATABASE_SQL_LIST= [
     # テーブル削除
     "DROP TABLE IF EXISTS `movies`",
@@ -61,12 +67,14 @@ INIT_DATABASE_SQL_LIST= [
     "DROP TABLE IF EXISTS `genres`",
     "DROP TABLE IF EXISTS `reviews`",
     "DROP TABLE IF EXISTS `similar_movies`",
+    "DROP TABLE IF EXISTS `movie_ids`",
     # テーブル作成
     CREATE_MOVIES_TABLE,
     CREATE_MOVIE_GENRES_TABLE,
     CREATE_GENRE_TABLE,
     CREATE_REVIEWS_TABLE,
-    CREATE_SIMILAR_MOVIES_TABLE
+    CREATE_SIMILAR_MOVIES_TABLE,
+    CREATE_MOVIE_IDS_TABLE
 ]
 
 

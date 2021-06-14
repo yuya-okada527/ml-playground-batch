@@ -1,6 +1,6 @@
 from datetime import date
 
-from domain.models.internal.movie_model import Genre, Movie
+from domain.models.internal.movie_model import Genre, Movie, MovieId
 from infra.repository.input.movie_repository import MovieRepository
 from sqlalchemy.engine.base import Connection
 
@@ -8,13 +8,13 @@ from sqlalchemy.engine.base import Connection
 def test_fetch_all_movie_id(conn: Connection):
 
     # テストデータ
-    movie = Movie(movie_id=0)
-    conn.execute("INSERT INTO movies (movie_id) VALUES (?)", movie.movie_id)
+    movie = Movie(movie_id=MovieId(movie_id=0))
+    conn.execute("INSERT INTO movies (movie_id) VALUES (?)", movie.movie_id.movie_id)
 
     # テスト用のリポジトリを初期化
     movie_repository = MovieRepository(conn)
 
-    assert movie_repository.fetch_all_movie_id() == [int(movie.movie_id)]
+    assert movie_repository.fetch_all_movie_id() == [int(movie.movie_id.movie_id)]
 
 
 def test_fetch_all_similar_movies(conn: Connection):
@@ -45,8 +45,7 @@ def test_fetch_all_movies(conn: Connection):
 
     # テストデータ
     movie = Movie(
-        movie_id=0,
-        imdb_id="imdb_id",
+        movie_id=MovieId(movie_id=0, imdb_id=1),
         original_title="original_title",
         japanese_title="japanese_title",
         overview="overview",
@@ -75,13 +74,11 @@ def test_fetch_all_movies(conn: Connection):
             ?,
             ?,
             ?,
-            ?,
             ?
         )
     """
     conn.execute(INSERT_MOVIE_STATEMENT,
-        movie.movie_id,
-        movie.imdb_id,
+        movie.movie_id.movie_id,
         movie.original_title,
         movie.japanese_title,
         movie.overview,
@@ -93,6 +90,11 @@ def test_fetch_all_movies(conn: Connection):
         movie.vote_count,
         movie.release_date_str
     )
+    conn.execute("INSERT INTO movie_ids VALUES (?, ?, ?)",
+        movie.movie_id.movie_id,
+        movie.movie_id.tmdb_id,
+        movie.movie_id.imdb_id
+    )
     for genre in movie.genres:
         conn.execute("INSERT INTO genres VALUES (?, ?, ?)",
             genre.genre_id,
@@ -100,12 +102,12 @@ def test_fetch_all_movies(conn: Connection):
             genre.japanese_name
         )
         conn.execute("INSERT INTO movie_genres VALUES (?, ?)",
-            movie.movie_id,
+            movie.movie_id.movie_id,
             genre.genre_id
         )
     for similar_movie_id in movie.similar_movies:
         conn.execute("INSERT INTO similar_movies VALUES (?, ?)",
-            movie.movie_id,
+            movie.movie_id.movie_id,
             similar_movie_id
         )
 

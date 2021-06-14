@@ -98,7 +98,7 @@ class TmdbMovieDetail(BaseModel):
     def to_internal_movie(self, movie_id: str) -> Movie:
         """内部モデル変換関数"""
         return Movie(
-            movie_id=MovieId(movie_id, tmdb_id=self.id),
+            movie_id=MovieId(movie_id=movie_id, tmdb_id=self.id),
             imdb_id=self.imdb_id,
             original_title=self.original_title,
             japanese_title=self.title,

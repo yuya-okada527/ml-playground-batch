@@ -1,4 +1,4 @@
-from domain.models.internal.movie_model import Genre, Movie
+from domain.models.internal.movie_model import Genre, Movie, MovieId
 from domain.models.solr.solr_schema_model import SolrSchemaModel
 from service.logic.output_logic import _make_freeword, calculate_difference
 
@@ -7,7 +7,7 @@ def test_make_freeword():
 
     # テストデータ
     movie = Movie(
-        movie_id=0,
+        movie_id=MovieId(movie_id=0),
         original_title="original_title",
         japanese_title="japanese_title",
         genres=[
@@ -35,7 +35,7 @@ def test_make_freeword_when_empty_element_exists():
 
     # テストデータ
     movie = Movie(
-        movie_id=0,
+        movie_id=MovieId(movie_id=0),
         original_title="",
         japanese_title=None,
         genres=[]

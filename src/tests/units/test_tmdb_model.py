@@ -1,6 +1,6 @@
 from datetime import date
 
-from domain.models.internal.movie_model import Genre, Movie
+from domain.models.internal.movie_model import Genre, Movie, MovieId
 from domain.models.rest.tmdb_model import (TmdbMovieDetail, TmdbMovieGenre,
                                            TmdbProductionCompany,
                                            TmdbProductionCountry,
@@ -29,9 +29,10 @@ def test_tmdb_movie_detail_mapping():
         vote_average=0.1,
         vote_count=0
     )
+    movie_id = "movie_id"
 
     expected = Movie(
-        movie_id=0,
+        movie_id=MovieId(movie_id=movie_id, tmdb_id=0),
         original_title="original_title",
         japanese_title="title",
         popularity=0.1,
@@ -41,4 +42,4 @@ def test_tmdb_movie_detail_mapping():
         genres=[Genre(genre_id=0)]
     )
 
-    assert movie_detail.to_internal_movie() == expected
+    assert movie_detail.to_internal_movie(movie_id) == expected
