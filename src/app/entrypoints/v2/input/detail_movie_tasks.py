@@ -35,7 +35,6 @@ def load_movie_details(movies: List[Movie]) -> None:
     movie_repository.save_movie_list(movies)
 
 
-
 with Flow("Detail Movie Tasks") as flow:
     truncate_task = truncate_movie_details()
     movie_ids = extract_movie_ids()
