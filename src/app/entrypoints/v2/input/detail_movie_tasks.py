@@ -31,7 +31,9 @@ def extract_movie_detail(movie_id: MovieId) -> Movie:
 
 @task
 def load_movie_details(movies: List[Movie]) -> None:
-    print("load_movie_details")
+    movie_repository = init_movie_repository()
+    movie_repository.save_movie_list(movies)
+
 
 
 with Flow("Detail Movie Tasks") as flow:

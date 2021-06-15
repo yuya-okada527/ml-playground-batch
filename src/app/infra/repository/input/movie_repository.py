@@ -22,7 +22,6 @@ INSERT INTO
 VALUES
     (
         %(movie_id)s,
-        %(imdb_id)s,
         %(original_title)s,
         %(japanese_title)s,
         %(overview)s,
@@ -35,7 +34,6 @@ VALUES
         %(release_date)s
     )
 ON DUPLICATE KEY UPDATE
-    imdb_id = %(imdb_id)s,
     original_title = %(original_title)s,
     japanese_title = %(japanese_title)s,
     overview = %(overview)s,
@@ -178,8 +176,7 @@ class MovieRepository:
             # TODO トランザクション
             # TODO リトライ
             movie_count += self.engine.execute(UPSERT_MOVIE_STATEMENT, {
-                "movie_id": movie.movie_id,
-                "imdb_id": movie.imdb_id,
+                "movie_id": movie.movie_id.movie_id,
                 "original_title": movie.original_title,
                 "japanese_title": movie.japanese_title,
                 "overview": movie.overview,
@@ -195,7 +192,7 @@ class MovieRepository:
             for genre in movie.genres:
                 try:
                     genre_count += self.engine.execute(INSERT_MOVIE_GENRE_STATEMENT, {
-                        "movie_id": movie.movie_id,
+                        "movie_id": movie.movie_id.movie_id,
                         "genre_id": genre.genre_id
                     }).rowcount
                 except IntegrityError:
