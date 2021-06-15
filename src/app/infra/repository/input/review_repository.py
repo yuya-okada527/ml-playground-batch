@@ -31,6 +31,10 @@ VALUES
         %(review)s
     )
 """
+TRUNCATE_REVIEW_STATEMENT = """\
+TRUNCATE TABLE
+    reviews
+"""
 
 
 # TODO Protocolよりabcの方が使いやすい？
@@ -42,6 +46,10 @@ class AbstractReviewRepository(Protocol):
 
     def save_review_list(self, review_list: list[Review]) -> int:
         """レビューデータを保存する"""
+        ...
+
+    def truncate_reviews(self) -> None:
+        """レビューデータを削除する"""
         ...
 
 
@@ -66,7 +74,7 @@ class ReviewRepository:
                 try:
                     count += conn.execute(INSERT_REVIEW_STATEMENT, {
                         "review_id": review.review_id,
-                        "movie_id": review.movie_id,
+                        "movie_id": review.movie_id.movie_id,
                         "review": review.review_without_emoji
                     }).rowcount
                 except IntegrityError:
@@ -75,3 +83,10 @@ class ReviewRepository:
                     log.exception("データ不正が発生しました.")
 
         return count
+
+    def truncate_reviews(self) -> None:
+        self.engine.execute(TRUNCATE_REVIEW_STATEMENT)
+
+
+def init_review_repository():
+    return ReviewRepository()

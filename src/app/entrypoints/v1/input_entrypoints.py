@@ -9,7 +9,6 @@ from infra.repository.input.genre_repository import GenreRepository
 from infra.repository.input.movie_repository import MovieRepository
 from infra.repository.input.review_repository import ReviewRepository
 from service.input_service import (exec_update_genre_master,
-                                   exec_update_movie_reviews,
                                    exec_update_similar_movies)
 
 app = typer.Typer()
@@ -64,26 +63,26 @@ def update_genre_master_batch(force_update: bool = False) -> None:
 #     )
 
 
-@app.command("reviews")
-def update_movie_reviews_batch() -> None:
-    """映画レビュー更新バッチ
+# @app.command("reviews")
+# def update_movie_reviews_batch() -> None:
+#     """映画レビュー更新バッチ
 
-    映画レビューを更新します.
-    """
+#     映画レビューを更新します.
+#     """
 
-    # クライアントの初期化
-    tmdb_client = TmdbClient(TmdbSettings())
+#     # クライアントの初期化
+#     tmdb_client = TmdbClient(TmdbSettings())
 
-    # リポジトリの初期化
-    movie_repository = MovieRepository()
-    review_repository = ReviewRepository()
+#     # リポジトリの初期化
+#     movie_repository = MovieRepository()
+#     review_repository = ReviewRepository()
 
-    # サービス実行
-    exec_update_movie_reviews(
-        tmdb_client=tmdb_client,
-        movie_repository=movie_repository,
-        review_repository=review_repository
-    )
+#     # サービス実行
+#     exec_update_movie_reviews(
+#         tmdb_client=tmdb_client,
+#         movie_repository=movie_repository,
+#         review_repository=review_repository
+#     )
 
 
 @app.command("similar_movies")

@@ -1,7 +1,7 @@
 
 from domain.models.internal.movie_model import Genre
 from domain.models.rest.tmdb_model import TmdbMovieGenre
-from service.logic.input_logic import (map_genre_list, update_review_data,
+from service.logic.input_logic import (map_genre_list,
                                        update_similar_movies_data)
 from tests.utils import (FakeMoviewRepository, FakeReviewRepositry,
                          FakeTmdbClient)
@@ -67,42 +67,42 @@ def test_map_genre_list_mismatched_genre_is_not_target():
     assert actual == expected
 
 
-def test_update_review_data():
+# def test_update_review_data():
 
-    # テストデータ
-    registered_movie_ids = [0]
-    registered_review_ids = []
-    tmdb_client = FakeTmdbClient()
-    review_repository = FakeReviewRepositry()
+#     # テストデータ
+#     registered_movie_ids = [0]
+#     registered_review_ids = []
+#     tmdb_client = FakeTmdbClient()
+#     review_repository = FakeReviewRepositry()
 
-    # 検証
-    actual = update_review_data(
-        registered_movie_ids=registered_movie_ids,
-        registered_review_ids=registered_review_ids,
-        tmdb_client=tmdb_client,
-        review_repository=review_repository
-    )
+#     # 検証
+#     actual = update_review_data(
+#         registered_movie_ids=registered_movie_ids,
+#         registered_review_ids=registered_review_ids,
+#         tmdb_client=tmdb_client,
+#         review_repository=review_repository
+#     )
 
-    assert actual == 2
+#     assert actual == 2
 
 
-def test_update_review_data_registered_review_id_is_not_target():
+# def test_update_review_data_registered_review_id_is_not_target():
 
-    # テストデータ
-    registered_movie_ids = [0]
-    registered_review_ids = ["review1"]
-    tmdb_client = FakeTmdbClient()
-    review_repository = FakeReviewRepositry()
+#     # テストデータ
+#     registered_movie_ids = [0]
+#     registered_review_ids = ["review1"]
+#     tmdb_client = FakeTmdbClient()
+#     review_repository = FakeReviewRepositry()
 
-    # 検証
-    actual = update_review_data(
-        registered_movie_ids=registered_movie_ids,
-        registered_review_ids=registered_review_ids,
-        tmdb_client=tmdb_client,
-        review_repository=review_repository
-    )
+#     # 検証
+#     actual = update_review_data(
+#         registered_movie_ids=registered_movie_ids,
+#         registered_review_ids=registered_review_ids,
+#         tmdb_client=tmdb_client,
+#         review_repository=review_repository
+#     )
 
-    assert actual == 1
+#     assert actual == 1
 
 
 def test_update_similar_movies_data():

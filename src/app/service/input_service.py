@@ -14,7 +14,7 @@ from infra.repository.input.genre_repository import AbstractGenreRepository
 from infra.repository.input.movie_repository import AbstractMovieRepository
 from infra.repository.input.review_repository import AbstractReviewRepository
 
-from service.logic.input_logic import (map_genre_list, update_review_data,
+from service.logic.input_logic import (map_genre_list,
                                        update_similar_movies_data)
 
 log = create_logger(__file__)
@@ -97,35 +97,35 @@ def exec_update_genre_master(
 #     log.info(f"人気映画情報取得バッチ実行完了. 更新数={len(movie_list)}")
 
 
-@batch_service
-def exec_update_movie_reviews(
-    tmdb_client: AbstractTmdbClient,
-    movie_repository: AbstractMovieRepository,
-    review_repository: AbstractReviewRepository
-) -> None:
-    """映画レビュー更新処理を実行します.
+# @batch_service
+# def exec_update_movie_reviews(
+#     tmdb_client: AbstractTmdbClient,
+#     movie_repository: AbstractMovieRepository,
+#     review_repository: AbstractReviewRepository
+# ) -> None:
+#     """映画レビュー更新処理を実行します.
 
-    Args:
-        tmdb_client: TMDBクライアント
-        movie_repository: 映画リポジトリ
-        review_repository: レビューリポジトリ
-    """
+#     Args:
+#         tmdb_client: TMDBクライアント
+#         movie_repository: 映画リポジトリ
+#         review_repository: レビューリポジトリ
+#     """
 
-    # 登録済の映画IDを全て取得
-    registered_movie_ids = movie_repository.fetch_all_movie_id()
+#     # 登録済の映画IDを全て取得
+#     registered_movie_ids = movie_repository.fetch_all_movie_id()
 
-    # 登録済のレビューIDを全て取得
-    registered_review_ids = review_repository.fetch_all_review_id()
+#     # 登録済のレビューIDを全て取得
+#     registered_review_ids = review_repository.fetch_all_review_id()
 
-    # 映画IDごとにレビューデータを取得・登録していく
-    count = update_review_data(
-        registered_movie_ids=registered_movie_ids,
-        registered_review_ids=registered_review_ids,
-        tmdb_client=tmdb_client,
-        review_repository=review_repository
-    )
+#     # 映画IDごとにレビューデータを取得・登録していく
+#     count = update_review_data(
+#         registered_movie_ids=registered_movie_ids,
+#         registered_review_ids=registered_review_ids,
+#         tmdb_client=tmdb_client,
+#         review_repository=review_repository
+#     )
 
-    log.info(f"レビューデータ収集バッチ実行終了.  登録数={count}")
+#     log.info(f"レビューデータ収集バッチ実行終了.  登録数={count}")
 
 
 @batch_service

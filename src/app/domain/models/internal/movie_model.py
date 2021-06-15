@@ -36,40 +36,6 @@ class Genre(BaseModel):
         return self.genre_id == other.genre_id
 
 
-class Review(BaseModel):
-    """レビューモデル
-
-    映画レビューモデル
-
-    Attributes:
-        review_id: レビューID (TMDBのレビューIDと一致)
-        movie_id: 映画ID
-        review: レビュー中身
-        review_without_emoji: 絵文字を除いたレビューデータ
-    """
-    review_id: str
-    movie_id: int
-    review: str
-
-    @property
-    def review_without_emoji(self) -> str:
-        return _remove_emoji(self.review)
-
-
-def _remove_emoji(src: str) -> str:
-    """絵文字を除去する
-
-    Args:
-        src (str): ソース文字列
-
-    Returns:
-        str: 除去済文字列
-    """
-    if not src:
-        return ""
-    return ''.join(c for c in src if c not in emoji.UNICODE_EMOJI["en"])
-
-
 class Keyword(BaseModel):
     """キーワードモデル
 
@@ -104,6 +70,40 @@ class MovieId(BaseModel):
         # 映画IDは、UUIDで生成
         movie_id = str(uuid.uuid4())
         return cls(movie_id=movie_id, tmdb_id=tmdb_id, imdb_id=imdb_id)
+
+
+class Review(BaseModel):
+    """レビューモデル
+
+    映画レビューモデル
+
+    Attributes:
+        review_id: レビューID (TMDBのレビューIDと一致)
+        movie_id: 映画ID
+        review: レビュー中身
+        review_without_emoji: 絵文字を除いたレビューデータ
+    """
+    review_id: str
+    movie_id: MovieId
+    review: str
+
+    @property
+    def review_without_emoji(self) -> str:
+        return _remove_emoji(self.review)
+
+
+def _remove_emoji(src: str) -> str:
+    """絵文字を除去する
+
+    Args:
+        src (str): ソース文字列
+
+    Returns:
+        str: 除去済文字列
+    """
+    if not src:
+        return ""
+    return ''.join(c for c in src if c not in emoji.UNICODE_EMOJI["en"])
 
 
 class Movie(BaseModel):

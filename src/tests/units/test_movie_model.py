@@ -105,7 +105,7 @@ def test_review_includes_emoji():
     # テストデータ
     review = Review(
         review_id="review",
-        movie_id=0,
+        movie_id=MovieId(movie_id=0),
         review="before🤗⭕🤓🤔🤘🦁⭐🆗🆖🈲🤐🤗🤖🤑🆙⏩after"
     )
 
