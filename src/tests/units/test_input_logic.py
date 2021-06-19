@@ -1,10 +1,7 @@
 
 from domain.models.internal.movie_model import Genre
 from domain.models.rest.tmdb_model import TmdbMovieGenre
-from service.logic.input_logic import (map_genre_list,
-                                       update_similar_movies_data)
-from tests.utils import (FakeMoviewRepository, FakeReviewRepositry,
-                         FakeTmdbClient)
+from service.logic.input_logic import map_genre_list
 
 
 def test_map_genre_list_registered_id_is_not_target():
@@ -105,58 +102,58 @@ def test_map_genre_list_mismatched_genre_is_not_target():
 #     assert actual == 1
 
 
-def test_update_similar_movies_data():
+# def test_update_similar_movies_data():
 
-    # テストデータ
-    registered_movies_id_set = {0, 2, 3}
-    registered_similar_movie_map = {}
-    tmdb_client = FakeTmdbClient()
-    movie_repository = FakeMoviewRepository()
+#     # テストデータ
+#     registered_movies_id_set = {0, 2, 3}
+#     registered_similar_movie_map = {}
+#     tmdb_client = FakeTmdbClient()
+#     movie_repository = FakeMoviewRepository()
 
-    # 検証
-    actual = update_similar_movies_data(
-        registered_movies_id_set=registered_movies_id_set,
-        registered_similar_movie_map=registered_similar_movie_map,
-        tmdb_client=tmdb_client,
-        movie_repository=movie_repository
-    )
+#     # 検証
+#     actual = update_similar_movies_data(
+#         registered_movies_id_set=registered_movies_id_set,
+#         registered_similar_movie_map=registered_similar_movie_map,
+#         tmdb_client=tmdb_client,
+#         movie_repository=movie_repository
+#     )
 
-    assert actual == 2
-
-
-def test_update_similar_movies_data_registered_movie_is_not_target():
-
-    # テストデータ
-    registered_movies_id_set = {0, 2, 3}
-    registered_similar_movie_map = {0: []}
-    tmdb_client = FakeTmdbClient()
-    movie_repository = FakeMoviewRepository()
-
-    # 検証
-    actual = update_similar_movies_data(
-        registered_movies_id_set=registered_movies_id_set,
-        registered_similar_movie_map=registered_similar_movie_map,
-        tmdb_client=tmdb_client,
-        movie_repository=movie_repository
-    )
-
-    assert actual == 0
+#     assert actual == 2
 
 
-def test_update_similar_movies_data_registered_movie_is_not_target_similar_movie():
+# def test_update_similar_movies_data_registered_movie_is_not_target():
 
-    # テストデータ
-    registered_movies_id_set = {0, 3}
-    registered_similar_movie_map = {}
-    tmdb_client = FakeTmdbClient()
-    movie_repository = FakeMoviewRepository()
+#     # テストデータ
+#     registered_movies_id_set = {0, 2, 3}
+#     registered_similar_movie_map = {0: []}
+#     tmdb_client = FakeTmdbClient()
+#     movie_repository = FakeMoviewRepository()
 
-    # 検証
-    actual = update_similar_movies_data(
-        registered_movies_id_set=registered_movies_id_set,
-        registered_similar_movie_map=registered_similar_movie_map,
-        tmdb_client=tmdb_client,
-        movie_repository=movie_repository
-    )
+#     # 検証
+#     actual = update_similar_movies_data(
+#         registered_movies_id_set=registered_movies_id_set,
+#         registered_similar_movie_map=registered_similar_movie_map,
+#         tmdb_client=tmdb_client,
+#         movie_repository=movie_repository
+#     )
 
-    assert actual == 1
+#     assert actual == 0
+
+
+# def test_update_similar_movies_data_registered_movie_is_not_target_similar_movie():
+
+#     # テストデータ
+#     registered_movies_id_set = {0, 3}
+#     registered_similar_movie_map = {}
+#     tmdb_client = FakeTmdbClient()
+#     movie_repository = FakeMoviewRepository()
+
+#     # 検証
+#     actual = update_similar_movies_data(
+#         registered_movies_id_set=registered_movies_id_set,
+#         registered_similar_movie_map=registered_similar_movie_map,
+#         tmdb_client=tmdb_client,
+#         movie_repository=movie_repository
+#     )
+
+#     assert actual == 1

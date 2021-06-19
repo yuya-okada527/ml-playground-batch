@@ -1,7 +1,6 @@
 import pytest
 from infra.client.tmdb.tmdb_api import TmdbClient
-from service.input_service import (exec_update_genre_master,
-                                   exec_update_similar_movies)
+from service.input_service import exec_update_genre_master
 from tests.utils import (FakeGenreRepository, FakeMoviewRepository,
                          FakeReviewRepositry, FakeTmdbClient)
 
@@ -39,10 +38,10 @@ def test_exec_update_genre_master(force_update):
 #     )
 
 
-def test_exec_update_similar_movies():
+# def test_exec_update_similar_movies():
 
-    # 例外が発生しないことを検証
-    exec_update_similar_movies(
-        tmdb_client=FakeTmdbClient(),
-        movie_repository=FakeMoviewRepository()
-    )
+#     # 例外が発生しないことを検証
+#     exec_update_similar_movies(
+#         tmdb_client=FakeTmdbClient(),
+#         movie_repository=FakeMoviewRepository()
+#     )

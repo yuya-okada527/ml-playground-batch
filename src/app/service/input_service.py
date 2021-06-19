@@ -11,11 +11,8 @@ from core.logger import create_logger
 from domain.enums.movie_enums import MovieLanguage
 from infra.client.tmdb.tmdb_api import AbstractTmdbClient
 from infra.repository.input.genre_repository import AbstractGenreRepository
-from infra.repository.input.movie_repository import AbstractMovieRepository
-from infra.repository.input.review_repository import AbstractReviewRepository
 
-from service.logic.input_logic import (map_genre_list,
-                                       update_similar_movies_data)
+from service.logic.input_logic import map_genre_list
 
 log = create_logger(__file__)
 
@@ -128,30 +125,30 @@ def exec_update_genre_master(
 #     log.info(f"レビューデータ収集バッチ実行終了.  登録数={count}")
 
 
-@batch_service
-def exec_update_similar_movies(
-    tmdb_client: AbstractTmdbClient,
-    movie_repository: AbstractMovieRepository
-) -> None:
-    """類似映画更新処理を実行します.
+# @batch_service
+# def exec_update_similar_movies(
+#     tmdb_client: AbstractTmdbClient,
+#     movie_repository: AbstractMovieRepository
+# ) -> None:
+#     """類似映画更新処理を実行します.
 
-    Args:
-        tmdb_client (AbstractTmdbClient): TMDBクライアント
-        movie_repository (AbstractMovieRepository): 映画リポジトリ
-    """
+#     Args:
+#         tmdb_client (AbstractTmdbClient): TMDBクライアント
+#         movie_repository (AbstractMovieRepository): 映画リポジトリ
+#     """
 
-    # 登録済の映画IDを全て取得
-    registered_movies_id_set = set(movie_repository.fetch_all_movie_id())
+#     # 登録済の映画IDを全て取得
+#     registered_movies_id_set = set(movie_repository.fetch_all_movie_id())
 
-    # 登録済の類似映画IDを全て取得 (key: movie_id, value: set(similar_movie_id))
-    registered_similar_movie_map = movie_repository.fetch_all_similar_movie()
+#     # 登録済の類似映画IDを全て取得 (key: movie_id, value: set(similar_movie_id))
+#     registered_similar_movie_map = movie_repository.fetch_all_similar_movie()
 
-    # 映画IDごとに全ての類似映画を取得
-    count = update_similar_movies_data(
-        registered_movies_id_set=registered_movies_id_set,
-        registered_similar_movie_map=registered_similar_movie_map,
-        tmdb_client=tmdb_client,
-        movie_repository=movie_repository
-    )
+#     # 映画IDごとに全ての類似映画を取得
+#     count = update_similar_movies_data(
+#         registered_movies_id_set=registered_movies_id_set,
+#         registered_similar_movie_map=registered_similar_movie_map,
+#         tmdb_client=tmdb_client,
+#         movie_repository=movie_repository
+#     )
 
-    log.info(f"類似映画収集バッチ実行終了.  登録数={count}")
+#     log.info(f"類似映画収集バッチ実行終了.  登録数={count}")

@@ -74,7 +74,7 @@ def call_get_api(
 
     # API実行
     try:
-        log.debug(f"url: {url}")
+        log.debug(f"url={url}?{_make_query_string(query_dict)}")
         response = requests.get(url, query_dict, timeout=TIMEOUT)
     except Timeout:
         log.warning(f"HTTP通信でタイムアウトが発生しました. url={url}")
@@ -163,3 +163,7 @@ def _check_status_code(response: Response) -> None:
     elif response.status_code >= 400:
         log.error(f"クライアントサイドのエラーが発生しました. ステータスコード={response.status_code}, レスポンス={response.text}")
         raise ClientSideError()
+
+
+def _make_query_string(query_dict: dict):
+    return "&".join(f"{key}={value}" for key, value in query_dict.items())

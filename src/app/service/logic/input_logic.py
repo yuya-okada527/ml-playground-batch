@@ -12,6 +12,8 @@ from infra.repository.input.review_repository import AbstractReviewRepository
 
 # 最大類似映画数
 MAX_SIMILAR_MOVIES = 5
+# 最大ページ数
+MAX_PAGE = 100
 # ログ頻度
 LOG_FREQUENCY = 20
 
@@ -95,57 +97,57 @@ def map_genre_list(
 #     return count
 
 
-def update_similar_movies_data(
-    registered_movies_id_set: set[int],
-    registered_similar_movie_map: dict[int, list[int]],
-    tmdb_client: AbstractTmdbClient,
-    movie_repository: AbstractMovieRepository
-) -> int:
-    """類似映画データを更新する
+# def update_similar_movies_data(
+#     registered_movies_id_set: set[int],
+#     registered_similar_movie_map: dict[int, list[int]],
+#     tmdb_client: AbstractTmdbClient,
+#     movie_repository: AbstractMovieRepository
+# ) -> int:
+#     """類似映画データを更新する
 
-    Args:
-        registered_movies_id_set (set[int]): 登録済映画IDセット
-        registered_similar_movie_map (dict[int, list[int]]): 登録済類似映画データ
-        tmdb_client (AbstractTmdbClient): TMDBクライアント
-        movie_repository (AbstractMovieRepository): 映画リポジトリ
+#     Args:
+#         registered_movies_id_set (set[int]): 登録済映画IDセット
+#         registered_similar_movie_map (dict[int, list[int]]): 登録済類似映画データ
+#         tmdb_client (AbstractTmdbClient): TMDBクライアント
+#         movie_repository (AbstractMovieRepository): 映画リポジトリ
 
-    Returns:
-        int: 更新数
-    """
+#     Returns:
+#         int: 更新数
+#     """
 
-    # 映画IDごとに全ての類似映画を取得
-    # TODO パフォーマンス改善
-    count = 0
-    for i, movie_id in enumerate(registered_movies_id_set, start=1):
+#     # 映画IDごとに全ての類似映画を取得
+#     # TODO パフォーマンス改善
+#     count = 0
+#     for i, movie_id in enumerate(registered_movies_id_set, start=1):
 
-        if i % LOG_FREQUENCY == 0:
-            log.info(f"{i}件目の処理を実行中.")
+#         if i % LOG_FREQUENCY == 0:
+#             log.info(f"{i}件目の処理を実行中.")
 
-        # 登録している映画はスキップする
-        if movie_id in registered_similar_movie_map:
-            continue
+#         # 登録している映画はスキップする
+#         if movie_id in registered_similar_movie_map:
+#             continue
 
-        # 最終ページまで全ての類似映画を取得する
-        similar_movie_list = _fetch_similar_movies(
-            movie_id=movie_id,
-            registered_movies_id_set=registered_movies_id_set,
-            tmdb_client=tmdb_client
-        )
+#         # 最終ページまで全ての類似映画を取得する
+#         similar_movie_list = _fetch_similar_movies(
+#             movie_id=movie_id,
+#             registered_movies_id_set=registered_movies_id_set,
+#             tmdb_client=tmdb_client
+#         )
 
-        # 登録できる映画IDがない場合、スキップ
-        if not similar_movie_list:
-            continue
+#         # 登録できる映画IDがない場合、スキップ
+#         if not similar_movie_list:
+#             continue
 
-        # UPSERT処理で登録
-        count += movie_repository.save_similar_movie_list(
-            movie_id=movie_id,
-            similar_movie_list=similar_movie_list
-        )
+#         # UPSERT処理で登録
+#         count += movie_repository.save_similar_movie_list(
+#             movie_id=movie_id,
+#             similar_movie_list=similar_movie_list
+#         )
 
-    return count
+#     return count
 
 
-def _fetch_similar_movies(
+def fetch_similar_movies(
     movie_id: int,
     registered_movies_id_set: set[int],
     tmdb_client: AbstractTmdbClient
@@ -184,6 +186,10 @@ def _fetch_similar_movies(
 
         # ページを更新し、再度API実行
         current_page += 1
+
+        # 最大ページ数を超えたら諦める
+        if current_page >= MAX_PAGE:
+            break
 
     return similar_movie_list
 

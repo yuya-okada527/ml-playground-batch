@@ -4,9 +4,10 @@
 """
 import uuid
 from datetime import date
-from typing import Any, Optional
+from typing import Any, List, Optional
 
 import emoji
+from domain.enums.similarity_enums import SimilarityModelType
 from pydantic import BaseModel
 
 # 映画公開日付の文字列フォーマット
@@ -182,3 +183,9 @@ class Movie(BaseModel):
             return False
 
         return True
+
+
+class SimilarMovie(BaseModel):
+    movie_id: MovieId
+    model_type: SimilarityModelType
+    similar_movie_id: MovieId

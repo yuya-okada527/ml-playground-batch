@@ -4,10 +4,10 @@
 """
 from collections import defaultdict
 from datetime import datetime
-from typing import Protocol
+from typing import List, Protocol
 
 from domain.models.internal.movie_model import (RELEASE_DATE_FMT, Genre, Movie,
-                                                MovieId)
+                                                MovieId, SimilarMovie)
 from infra.repository.input.base_repository import ENGINE
 from sqlalchemy.engine.base import Engine
 from sqlalchemy.engine.result import RowProxy
@@ -103,6 +103,7 @@ INSERT INTO
 VALUES
     (
         %(movie_id)s,
+        %(model_type)s,
         %(similar_movie_id)s
     )
 """
@@ -118,6 +119,10 @@ TRUNCATE_MOVIE_STATEMENT = """\
 TRUNCATE TABLE
     movies
 """
+TRUNCATE_SIMILAR_MOVIE_STATEMENT = """\
+TRUNCATE TABLE
+    similar_movies
+"""
 
 
 class AbstractMovieRepository(Protocol):
@@ -132,14 +137,12 @@ class AbstractMovieRepository(Protocol):
 
     def save_similar_movie_list(
         self,
-        movie_id: int,
-        similar_movie_list: list[int]
+        similar_movie_list: List[SimilarMovie]
     ) -> int:
         """類似映画リストを保存します.
 
         Args:
-            movie_id: 映画ID
-            similar_movie_list: 類似映画IDリスト
+            similar_movie_list: 類似映画リスト
         """
         ...
 
@@ -160,6 +163,11 @@ class AbstractMovieRepository(Protocol):
         ...
 
     def truncate_movies(self) -> None:
+        """全映画詳細を削除する"""
+        ...
+
+    def truncate_similar_movies(self) -> None:
+        """全類似映画を削除する"""
         ...
 
 
@@ -201,17 +209,17 @@ class MovieRepository:
 
     def save_similar_movie_list(
         self,
-        movie_id: int,
-        similar_movie_list: list[int]
+        similar_movie_list: List[SimilarMovie]
     ) -> int:
 
         count = 0
         with self.engine.begin() as conn:
-            for similar_movie_id in similar_movie_list:
+            for similar_movie in similar_movie_list:
                 try:
                     count += conn.execute(INSERT_SIMILAR_MOVIE_STATEMENT, {
-                        "movie_id": movie_id,
-                        "similar_movie_id": similar_movie_id
+                        "movie_id": similar_movie.movie_id.movie_id,
+                        "model_type": similar_movie.model_type.value,
+                        "similar_movie_id": similar_movie.similar_movie_id.movie_id
                     }).rowcount
                 except IntegrityError:
                     # 重複データの登録は無視する
@@ -261,6 +269,9 @@ class MovieRepository:
 
     def truncate_movies(self) -> None:
         self.engine.execute(TRUNCATE_MOVIE_STATEMENT)
+
+    def truncate_similar_movies(self) -> None:
+        self.engine.execute(TRUNCATE_SIMILAR_MOVIE_STATEMENT)
 
 
 def init_movie_repository():

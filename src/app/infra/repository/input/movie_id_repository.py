@@ -9,8 +9,8 @@ from sqlalchemy.engine.result import RowProxy
 # SQL
 # ---------------------------
 TRUNCATE_MOVIE_IDS_TABLE = """\
--- TRUNCATE TABLE movie_ids
-DELETE FROM movie_ids
+TRUNCATE TABLE movie_ids
+-- DELETE FROM movie_ids
 """
 INSERT_MOVIE_ID = """\
 INSERT INTO
@@ -30,6 +30,16 @@ SELECT
 FROM
     movie_ids
 """
+SELECT_MOVIE_ID_BY_TMDB_ID_STATEMENT = """\
+SELECT
+    movie_id,
+    tmdb_id,
+    imdb_id
+FROM
+    movie_ids
+WHERE
+    tmdb_id in (%(tmdb_ids)s)
+"""
 
 
 class AbstractMovieIdRepository(Protocol):
@@ -41,6 +51,9 @@ class AbstractMovieIdRepository(Protocol):
         raise NotImplementedError()
 
     def fetch_all(self) -> List[MovieId]:
+        raise NotImplementedError()
+
+    def fetch_by_tmdb_ids(self, tmdb_ids: List[int]) -> List[MovieId]:
         raise NotImplementedError()
 
 
@@ -63,6 +76,12 @@ class MovieIdRepository:
 
     def fetch_all(self) -> List[MovieId]:
         return [_map_to_movie_id(result) for result in self.engine.execute(SELECT_ALL_MOVIE_ID_STATEMENT)]
+
+    def fetch_by_tmdb_ids(self, tmdb_ids: List[int]) -> List[MovieId]:
+        results = self.engine.execute(SELECT_MOVIE_ID_BY_TMDB_ID_STATEMENT, {
+            "tmdb_ids": ",".join([str(tmdb_id) for tmdb_id in tmdb_ids])
+        })
+        return [_map_to_movie_id(result) for result in results]
 
 
 def _map_to_movie_id(result: RowProxy) -> MovieId:

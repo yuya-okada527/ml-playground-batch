@@ -6,10 +6,7 @@ import typer
 from core.config import TmdbSettings
 from infra.client.tmdb.tmdb_api import TmdbClient
 from infra.repository.input.genre_repository import GenreRepository
-from infra.repository.input.movie_repository import MovieRepository
-from infra.repository.input.review_repository import ReviewRepository
-from service.input_service import (exec_update_genre_master,
-                                   exec_update_similar_movies)
+from service.input_service import exec_update_genre_master
 
 app = typer.Typer()
 
@@ -85,24 +82,24 @@ def update_genre_master_batch(force_update: bool = False) -> None:
 #     )
 
 
-@app.command("similar_movies")
-def update_similar_movies_batch() -> None:
-    """類似映画更新バッチ
+# @app.command("similar_movies")
+# def update_similar_movies_batch() -> None:
+#     """類似映画更新バッチ
 
-    類似映画を更新します.
-    """
+#     類似映画を更新します.
+#     """
 
-    # クライアントの初期化
-    tmdb_client = TmdbClient(TmdbSettings())
+#     # クライアントの初期化
+#     tmdb_client = TmdbClient(TmdbSettings())
 
-    # リポジトリの初期化
-    movie_repository = MovieRepository()
+#     # リポジトリの初期化
+#     movie_repository = MovieRepository()
 
-    # サービス実行
-    exec_update_similar_movies(
-        tmdb_client=tmdb_client,
-        movie_repository=movie_repository
-    )
+#     # サービス実行
+#     exec_update_similar_movies(
+#         tmdb_client=tmdb_client,
+#         movie_repository=movie_repository
+#     )
 
 
 if __name__ == "__main__":
