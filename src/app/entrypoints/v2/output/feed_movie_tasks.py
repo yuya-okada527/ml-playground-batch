@@ -3,6 +3,7 @@ from typing import List
 
 from domain.models.elastic.elastic_movie_model import ElasticMovieModel
 from domain.models.internal.movie_model import Movie
+from infra.repository.input.movie_repository import init_movie_repository
 from prefect import Flow, task
 from prefect.utilities.tasks import unmapped
 
@@ -14,13 +15,12 @@ def create_exec_time() -> int:
 
 @task
 def extract_all_movies() -> List[Movie]:
-    print("extract_all_movies")
-    return []
+    movie_repository = init_movie_repository()
+    return movie_repository.fetch_all()
 
 
 @task
 def transform_movie(movie: Movie, exec_time: int) -> ElasticMovieModel:
-    print("transform_movie")
     return None
 
 
