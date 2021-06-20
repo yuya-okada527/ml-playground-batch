@@ -30,6 +30,7 @@ def truncate_similar_movies() -> None:
     movie_repository = init_movie_repository()
     movie_repository.truncate_similar_movies()
 
+
 @task
 def extract_movie_ids() -> List[MovieId]:
     movie_id_repository = init_movie_id_repository()

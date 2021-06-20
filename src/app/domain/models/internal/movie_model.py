@@ -4,7 +4,7 @@
 """
 import uuid
 from datetime import date
-from typing import Any, List, Optional
+from typing import Any, Optional
 
 import emoji
 from domain.enums.similarity_enums import SimilarityModelType

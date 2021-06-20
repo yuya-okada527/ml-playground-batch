@@ -37,6 +37,7 @@ class ElasticMovieModel(Document):
     class Index:
         name = "movie"
 
+
 def init():
     connections.create_connection(hosts=["localhost"])
     if not connections.get_connection().indices.exists(index="movie"):
