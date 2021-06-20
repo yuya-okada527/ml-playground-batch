@@ -7,8 +7,6 @@ from core.logger import create_logger
 from domain.models.internal.movie_model import Genre, MovieId, Review
 from domain.models.rest.tmdb_model import TmdbMovieGenre, TmdbMovieReview
 from infra.client.tmdb.tmdb_api import AbstractTmdbClient
-from infra.repository.input.movie_repository import AbstractMovieRepository
-from infra.repository.input.review_repository import AbstractReviewRepository
 
 # 最大類似映画数
 MAX_SIMILAR_MOVIES = 5
