@@ -1,4 +1,4 @@
-from typing import List, Tuple
+from typing import List
 
 from domain.enums.movie_enums import MovieLanguage
 from domain.enums.similarity_enums import SimilarityModelType
@@ -9,7 +9,7 @@ from infra.repository.input.movie_id_repository import init_movie_id_repository
 from infra.repository.input.movie_repository import init_movie_repository
 from infra.repository.input.review_repository import init_review_repository
 from prefect import Flow, task
-from prefect.utilities.tasks import unmapped
+# from prefect.utilities.tasks import unmapped
 from service.logic.input_logic import fetch_similar_movies, map_review_model
 
 
@@ -95,25 +95,26 @@ def load_similar_movies(similar_movies: List[SimilarMovie]) -> None:
 
 with Flow("Detail Movie Tasks") as flow:
     # データを削除
-    # truncate_movies_task = truncate_movie_details()
-    # truncate_reviews_task = truncate_movie_reviews()
-    truncate_similar_movies_task = truncate_similar_movies()
+    truncate_movies_task = truncate_movie_details()
+    truncate_reviews_task = truncate_movie_reviews()
+    # truncate_similar_movies_task = truncate_similar_movies()
 
     # 映画IDを取得
     movie_ids = extract_movie_ids()
 
     # 映画詳細を取得
-    # movies = extract_movie_detail.map(movie_id=movie_ids)
-    # load_movies_task = load_movie_details(movies)
-    # load_movies_task.set_upstream(truncate_movies_task)
+    movies = extract_movie_detail.map(movie_id=movie_ids)
+    load_movies_task = load_movie_details(movies)
+    load_movies_task.set_upstream(truncate_movies_task)
 
     # 映画レビューを取得
-    # movie_reviews = extract_movie_review.map(movie_id=movie_ids)
-    # load_reviews_task = load_movie_reviews.map(review_list=movie_reviews)
-    # load_reviews_task.set_upstream(truncate_reviews_task)
+    movie_reviews = extract_movie_review.map(movie_id=movie_ids)
+    load_reviews_task = load_movie_reviews.map(review_list=movie_reviews)
+    load_reviews_task.set_upstream(truncate_reviews_task)
 
     # 類似映画を取得
     # TODO 類似映画が全然マッチしない問題。。。。
-    similar_movies = extract_similar_movie.map(movie_id=movie_ids, registered_movie_ids=unmapped(movie_ids))
-    load_similar_movies_task = load_similar_movies.map(similar_movies=similar_movies)
-    load_similar_movies_task.set_upstream(truncate_similar_movies_task)
+    # TODO とりあえず、ここら辺はコメントアウト
+    # similar_movies = extract_similar_movie.map(movie_id=movie_ids, registered_movie_ids=unmapped(movie_ids))
+    # load_similar_movies_task = load_similar_movies.map(similar_movies=similar_movies)
+    # load_similar_movies_task.set_upstream(truncate_similar_movies_task)

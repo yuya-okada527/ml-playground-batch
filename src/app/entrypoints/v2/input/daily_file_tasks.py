@@ -22,7 +22,7 @@ def extract_daily_file(target_date: date) -> ObjectKey:
     # TODO UTCの8時に更新があるので、そこに合わせて取得できるように調整する必要あり
     target_date = target_date or date.today()
     # TODO for debug
-    target_date = date(2021, 5, 18)
+    target_date = date(2021, 6, 19)
 
     # オブジェクトのキー名を作成
     object_key = ObjectKey(
