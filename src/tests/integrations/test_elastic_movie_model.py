@@ -19,6 +19,7 @@ def test_save_and_get_same_movie():
     assert movie.to_dict() == ElasticMovieModel.get(id=test_id).to_dict()
 
 
+@pytest.mark.skip
 def test_trigram_analyser_properly_tokenize():
 
     response = trigram_analyzer.simulate("Hello")
