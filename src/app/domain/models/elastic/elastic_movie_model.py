@@ -1,0 +1,2 @@
+class ElasticMovieModel:
+    pass
