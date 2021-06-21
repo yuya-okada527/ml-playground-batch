@@ -38,7 +38,9 @@ class ElasticMovieModel(Document):
         name = "movie"
 
 
+# TODO メソッド名変える
 def init():
+    # ホストを環境変数に
     connections.create_connection(hosts=["localhost"])
     if not connections.get_connection().indices.exists(index="movie"):
         ElasticMovieModel.init()

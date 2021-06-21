@@ -5,8 +5,8 @@
 from typing import Any
 
 from core.constants import HALF_SPACE
+from domain.models.elastic.elastic_movie_model import ElasticMovieModel
 from domain.models.internal.movie_model import Movie
-from domain.models.solr.solr_movie_model import MovieSolrModel
 from domain.models.solr.solr_schema_model import SolrSchemaModel
 
 
@@ -56,17 +56,17 @@ def calculate_difference(
     }
 
 
-def map_to_solr_model(movie: Movie, exec_time: int) -> MovieSolrModel:
-    """Solrモデルに対するマッピングを実施する.
+def map_to_elastic_model(movie: Movie, exec_time: int) -> ElasticMovieModel:
+    """Elasticモデルに対するマッピングを実施する.
 
     Args:
         movie (Movie): 映画モデル
         exec_time (int): 実行日時
 
     Returns:
-        MovieSolrModel: Solr映画モデル
+        MovieSolrModel: Elastic映画モデル
     """
-    return MovieSolrModel(
+    return ElasticMovieModel(
         movie_id=movie.movie_id.movie_id,
         free_word=_make_freeword(movie),
         original_title=movie.original_title,

@@ -6,6 +6,7 @@ from domain.models.internal.movie_model import Movie
 from infra.repository.input.movie_repository import init_movie_repository
 from prefect import Flow, task
 from prefect.utilities.tasks import unmapped
+from service.logic.output_logic import map_to_elastic_model
 
 
 @task
@@ -21,7 +22,7 @@ def extract_all_movies() -> List[Movie]:
 
 @task
 def transform_movie(movie: Movie, exec_time: int) -> ElasticMovieModel:
-    return None
+    return map_to_elastic_model(movie, exec_time)
 
 
 @task
