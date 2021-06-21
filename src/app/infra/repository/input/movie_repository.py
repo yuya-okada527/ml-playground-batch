@@ -73,8 +73,7 @@ SELECT
     m.release_date,
     g.genre_id,
     g.name,
-    g.japanese_name,
-    sm.similar_movie_id
+    g.japanese_name
 FROM
     movies AS m
     INNER JOIN
@@ -85,9 +84,6 @@ FROM
     INNER JOIN
         genres AS g
         ON mg.genre_id = g.genre_id
-    INNER JOIN
-        similar_movies AS sm
-        ON m.movie_id = sm.movie_id
 """
 
 SELECT_ALL_MOVIE_ID_STATEMENT = """\
@@ -239,12 +235,10 @@ class MovieRepository:
                 movie_map[result.movie_id] = _map_to_movie(result)
             else:
                 movie_map[result.movie_id].genres.append(_map_to_genre(result))
-                movie_map[result.movie_id].similar_movies.append(result.similar_movie_id)
 
         result = []
         for movie in movie_map.values():
             movie.genres = list(set(movie.genres))
-            movie.similar_movies = list(set(movie.similar_movies))
             result.append(movie)
         return result
 
@@ -295,8 +289,7 @@ def _map_to_movie(result: RowProxy) -> Movie:
         vote_average=result.vote_average,
         vote_count=result.vote_count,
         release_date=datetime.strptime(result.release_date, RELEASE_DATE_FMT) if result.release_date else None,
-        genres=[_map_to_genre(result)],
-        similar_movies=[int(result.similar_movie_id)]
+        genres=[_map_to_genre(result)]
     )
 
 

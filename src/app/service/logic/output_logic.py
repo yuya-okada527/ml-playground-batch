@@ -67,6 +67,7 @@ def map_to_elastic_model(movie: Movie, exec_time: int) -> ElasticMovieModel:
         MovieSolrModel: Elastic映画モデル
     """
     return ElasticMovieModel(
+        meta={"id": movie.movie_id.movie_id},
         movie_id=movie.movie_id.movie_id,
         free_word=_make_freeword(movie),
         original_title=movie.original_title,
