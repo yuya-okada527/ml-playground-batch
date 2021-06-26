@@ -56,8 +56,7 @@ def test_fetch_all_movies(conn: Connection):
         vote_average=1,
         vote_count=0,
         release_date=date(2020, 1, 1),
-        genres=[Genre(genre_id=0, name="name", japanese_name="japanese_name")],
-        similar_movies=[1, 2]
+        genres=[Genre(genre_id=0, name="name", japanese_name="japanese_name")]
     )
     INSERT_MOVIE_STATEMENT = """\
     INSERT INTO
@@ -104,11 +103,6 @@ def test_fetch_all_movies(conn: Connection):
         conn.execute("INSERT INTO movie_genres VALUES (?, ?)",
             movie.movie_id.movie_id,
             genre.genre_id
-        )
-    for similar_movie_id in movie.similar_movies:
-        conn.execute("INSERT INTO similar_movies VALUES (?, ?)",
-            movie.movie_id.movie_id,
-            similar_movie_id
         )
 
     # テスト用のリポジトリを初期化
