@@ -44,3 +44,8 @@ def init():
     connections.create_connection(hosts=["localhost"])
     if not connections.get_connection().indices.exists(index="movie"):
         ElasticMovieModel.init()
+
+
+def refresh_index():
+    connections.create_connection(hosts=["localhost"])
+    connections.get_connection().indices.refresh()
